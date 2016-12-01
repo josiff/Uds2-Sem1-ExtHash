@@ -25,7 +25,7 @@ public abstract class Record {
     
     abstract String getHas();
     
-    
+    abstract Record newRecord();
     
     
 }

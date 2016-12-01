@@ -26,16 +26,20 @@ public class Block {
 
     private final int STORE = 8;
 
-    public Block(int pocet) {
-        record = new Record[5];
+    public Block(int pocet, Record record) {
+        this.record = new Record[pocet];
         countRec = 0;
-        size = (5 * 6) + STORE;
-        recSize = 6; //todo
+        size = (pocet * record.getSize()) + STORE;
+        recSize = record.getSize(); 
+
+        for (int i = 0; i < this.record.length; i++) {
+            this.record[i] = record.newRecord();
+        }
 
     }
 
     public Block() {
-        this(5);
+        
 
     }
 
@@ -78,7 +82,7 @@ public class Block {
 
     public void fromArray(byte[] b) {
 
-        clearRec();
+        
         int position = 0;
         int pocRecord = 0;
         byte[] pom = new byte[STORE];
@@ -96,17 +100,15 @@ public class Block {
             if (hlbka == 0) {
                 hlbka = 1;
             }
-
+            int i = 0;
             while (position < b.length) {
                 if (countRec >= pocRecord) {
                     break;
                 }
                 System.arraycopy(b, position, pom, 0, recSize);
                 position += recSize;
-                Record r = new Osoba();
-                r.fromByteArray(pom);
-
-                add(r);
+                record[i].fromByteArray(pom);
+                i++;
 
             }
 

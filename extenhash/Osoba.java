@@ -111,6 +111,11 @@ public class Osoba extends Record {
         }*/
         return key;
     }
+
+    @Override
+    Record newRecord() {
+        return new Osoba();
+    }
     
     
     

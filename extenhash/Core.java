@@ -15,8 +15,7 @@ public class Core {
     private Block block;
 
     public Core() {
-        osoby = new ExtentHash("Osoby.txt");
-        block = new Block(5);
+       
     }
 
     
