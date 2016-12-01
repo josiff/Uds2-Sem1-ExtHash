@@ -23,30 +23,43 @@ public class Block {
     private boolean platny;
     private int recSize;
     private int hlbka;
+    
+    private boolean load; 
 
     private final int STORE = 8;
 
     public Block(int pocet, Record record) {
         this.record = new Record[pocet];
         countRec = 0;
-        size = (pocet * record.getSize()) + STORE;
-        recSize = record.getSize(); 
+        size = (pocet * record.getData().getSize()) + STORE;
+        recSize = record.getData().getSize();
+        load = false;
 
         for (int i = 0; i < this.record.length; i++) {
-            this.record[i] = record.newRecord();
+            this.record[i] = new Record(record.getData());
         }
 
     }
 
-    public Block() {
-        
+    public Block(Block block) {
+        this.record = new Record[block.getRecord().length];
+        this.countRec = block.getCountRec();
+        this.size = (block.getRecord().length * block.getRecSize()) + STORE;
+        this.recSize = block.getRecSize();
+        this.hlbka = block.getHlbka();
+        load = true;
+        for (int i = 0; i < record.length; i++) {
+            this.record[i] = new Record(block.getRecord()[i].getData());
+            this.record[i].setPlatny(block.getRecord()[i].isPlatny());
+        }
 
     }
 
     public void add(Record r) {
         for (int i = 0; i < record.length; i++) {
-            if (record[i] == null) {
+            if (!record[i].isPlatny()) {
                 record[i] = r;
+                record[i].setPlatny(true);
                 countRec++;
                 break;
             }
@@ -55,7 +68,7 @@ public class Block {
     }
 
     public void remove(int index) {
-        record[index] = null;
+        record[index].setPlatny(false);
         countRec--;
 
     }
@@ -80,12 +93,11 @@ public class Block {
         this.size = size;
     }
 
-    public void fromArray(byte[] b) {
+    public Record[] fromArray(byte[] b) {
 
-        
         int position = 0;
         int pocRecord = 0;
-        byte[] pom = new byte[STORE];
+        byte[] pom = new byte[recSize];
         System.arraycopy(b, position, pom, 0, STORE);
 
         position = STORE;
@@ -104,10 +116,13 @@ public class Block {
             while (position < b.length) {
                 if (countRec >= pocRecord) {
                     break;
+
                 }
                 System.arraycopy(b, position, pom, 0, recSize);
                 position += recSize;
-                record[i].fromByteArray(pom);
+                this.record[i].getData().fromByteArray(pom);
+                this.record[i].setPlatny(true);
+                countRec++;
                 i++;
 
             }
@@ -115,7 +130,7 @@ public class Block {
         } catch (IOException e) {
             throw new IllegalStateException("Error during conversion from byte array.");
         }
-
+        return record;
     }
 
     public byte[] getByteArray() {
@@ -132,9 +147,11 @@ public class Block {
             System.arraycopy(hlpByteArrayOutputStream.toByteArray(), 0, b, position, STORE);
             position = STORE;
             for (Record rec : record) {
-                if (rec != null) {
-                    System.arraycopy(rec.getByteArray(), 0, b, position, rec.getSize());
-                    position += rec.getSize();
+                if (rec.isPlatny()) {
+                    System.arraycopy(rec.getData().getByteArray(), 0, b, position, rec.getData().getSize());
+                    position += rec.getData().getSize();
+                    rec.setPlatny(false);
+                    countRec--;
 
                 }
             }
@@ -165,4 +182,44 @@ public class Block {
         this.hlbka = hlbka;
     }
 
+    public String getAktStav() {
+        String text = "Hlbka bloku: " + hlbka + "\n";
+        int i = 0;
+        for (Record rec : record) {
+            if (rec.isPlatny()) {
+                text += rec.toString() + "\n";
+                remove(i);
+                i++;
+            }
+        }
+        return text;
+    }
+
+    public Block copyBlock() {
+
+        return new Block(this);
+
+    }
+
+    public int getCountRec() {
+        return countRec;
+    }
+
+    public void setRecord(Record[] record) {
+        this.record = record;
+    }
+
+    public int getRecSize() {
+        return recSize;
+    }
+
+    public boolean isLoad() {
+        return load;
+    }
+
+    public void setLoad(boolean load) {
+        this.load = load;
+    }
+
+    
 }

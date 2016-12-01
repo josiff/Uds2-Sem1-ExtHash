@@ -16,13 +16,13 @@ import java.io.IOException;
  *
  * @author Jožko
  */
-public class Osoba extends Record {
+public class Osoba implements IData {
 
-    private char meno;
+    private String meno;
     private int cis;
     private String key;
 
-    public Osoba(char meno, String key) {
+    public Osoba(String meno, String key) {
 
         this.meno = meno;
         this.key = key;
@@ -35,7 +35,7 @@ public class Osoba extends Record {
     }
 
     @Override
-    protected BitSet getHash(int pocet) {
+    public BitSet getHash(int pocet) {
 
         String str = Integer.toBinaryString(cis);
         BitSet bs = new BitSet();
@@ -43,13 +43,14 @@ public class Osoba extends Record {
     }
 
     @Override
-    protected byte[] getByteArray() {
+    public byte[] getByteArray() {
         ByteArrayOutputStream hlpByteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream hlpOutStream = new DataOutputStream(hlpByteArrayOutputStream);
 
         try {
-            hlpOutStream.writeChar(meno);
             hlpOutStream.writeInt(cis);
+            hlpOutStream.writeUTF(String.format("%20s", this.meno));
+            hlpOutStream.writeUTF(String.format("%10s", this.key));
 
             return hlpByteArrayOutputStream.toByteArray();
 
@@ -59,13 +60,14 @@ public class Osoba extends Record {
     }
 
     @Override
-    protected void fromByteArray(byte[] paArray) {
+    public void fromByteArray(byte[] paArray) {
         ByteArrayInputStream hlpByteArrayInputStream = new ByteArrayInputStream(paArray);
         DataInputStream hlpInStream = new DataInputStream(hlpByteArrayInputStream);
 
         try {
-            this.meno = hlpInStream.readChar();
             this.cis = hlpInStream.readInt();
+            this.meno = hlpInStream.readUTF().trim();
+            this.key = hlpInStream.readUTF().trim();
 
         } catch (IOException e) {
             throw new IllegalStateException("Error during conversion from byte array.");
@@ -74,16 +76,16 @@ public class Osoba extends Record {
 
     @Override
     public int getSize() {
-        return 6;
+        return 38; // 4 + (20+2) + (10+2)
     }
 
     @Override
-    protected boolean equals(Record record) {
-        Osoba os = (Osoba) record;
+    public boolean equals(Record record) {
+        Osoba os = (Osoba) record.getData();
         return meno == os.getMeno();
     }
 
-    public char getMeno() {
+    public String getMeno() {
         return meno;
     }
 
@@ -93,31 +95,28 @@ public class Osoba extends Record {
 
     @Override
     public String toString() {
-        return meno + " " + cis;
+        return meno + " " + cis + " | " + key ;
     }
 
     @Override
-    String getHas() {
+    public String getHas() {
         /*String str = Integer.toBinaryString(cis);
-        if (str.length() >= 8) {
+         if (str.length() >= 8) {
 
-            return str;
-        } else {
+         return str;
+         } else {
 
-            int pom = 8 - str.length();
-            String s = "00000000";
-            s = s.substring(0, pom);
-            return s + str;
-        }*/
+         int pom = 8 - str.length();
+         String s = "00000000";
+         s = s.substring(0, pom);
+         return s + str;
+         }*/
         return key;
     }
 
     @Override
-    Record newRecord() {
+    public IData newRecord() {
         return new Osoba();
     }
-    
-    
-    
 
 }

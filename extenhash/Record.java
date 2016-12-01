@@ -5,27 +5,43 @@
  */
 package extenhash;
 
-import java.util.BitSet;
-
 /**
  *
  * @author Jožko
  */
-public abstract class Record {
+public class Record {
 
-    abstract BitSet getHash(int pocet);
+    private IData data;
+    private boolean platny;
 
-    abstract byte[] getByteArray();
+    public Record(IData data) {
+        this.data = data;
+        this.platny = false;
+    }
 
-    abstract void fromByteArray(byte [] array);
+    public IData getData() {
+        return data;
+    }
+
+    public void setData(IData data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return data.toString();
+    }
+
+    public boolean isPlatny() {
+        return platny;
+    }
+
+    public void setPlatny(boolean platny) {
+        this.platny = platny;
+    }
     
-    abstract int getSize();
-    
-    abstract boolean equals(Record record);
-    
-    abstract String getHas();
-    
-    abstract Record newRecord();
     
     
+    
+
 }
