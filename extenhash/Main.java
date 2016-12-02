@@ -49,27 +49,26 @@ public class Main {
 
         ex.insert(os);
         os = new Record(new Osoba("Lucenec", "01100100"));
-
         ex.insert(os);
 
         os = new Record(new Osoba("Zvolen", "11101001"));
         ex.insert(os);
+
         os = new Record(new Osoba("Presov", "11110000"));
         ex.insert(os);
 
         os = new Record(new Osoba("Puchov", "10110111"));
         ex.insert(os);
-        
 
         os = new Record(new Osoba("Ilava", "00001111"));
-        
         ex.insert(os);
+        
+        
         os = new Record(new Osoba("Brezno", "00111100"));
-       
-        ex.insert(os);
-        
-        ex.getAktStav();
 
+        ex.insert(os);
+
+        ex.getAktStav();
     }
 
 }

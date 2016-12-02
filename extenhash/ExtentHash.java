@@ -5,6 +5,7 @@
  */
 package extenhash;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -133,11 +134,12 @@ public class ExtentHash {
                     if (block.getHlbka() == getHlbka()) {
 
                         rozsirAdresy(index);
+                        index = 2 * index;
 
                         //ulozim zmenenu hlbku
                         //insert(block, adresa);
                     }
-                    rozdelBlock(block, index);
+                    rozdelBlock(record, index);
 
                 } else {
                     block.add(record);
@@ -151,30 +153,51 @@ public class ExtentHash {
 
     }
 
-    public void rozdelBlock(Block paBlock, int index) {
-        int max = Collections.max(adresar) + paBlock.getSize();
-        index = index * 2;
-        int newIndex = index + 1;
-        adresar.set(newIndex, max);
-        paBlock.setHlbka(paBlock.getHlbka() + 1);
-        Block b = paBlock.copyBlock();
+    public void rozdelBlock(Record record, int index) {
+        block.setHlbka(block.getHlbka() + 1);
 
-        Record[] rec = paBlock.getRecord();
+        Block b = block.copyBlock();
+
+        Record[] rec = block.getRecord();
         for (int i = 0; i < rec.length; i++) {
-            if (getIndex(rec[i]) == newIndex) {
-                paBlock.remove(i);
-            } else {
+            if (getIndex(rec[i], block.getHlbka()) == index) {
                 b.remove(i);
+
+            } else {
+                block.remove(i);
+
             }
         }
 
-        insert(paBlock, adresar.get(index));
-        block = b;
+        int novaAdres = Collections.max(adresar) + block.getSize();
+        for (int i = 0; i < adresar.size(); i++) {
+            if (adresar.get(i) == adresar.get(index)) {
+                int pom = i >>> (hlbka - b.getHlbka());
+                if (pom != index) {
+                    adresar.set(i, novaAdres);
+                }
+            }
+        }
+
+        if (getIndex(record) == index) {
+            insert(b, novaAdres);
+            block.setLoad(true);
+
+        } else {
+            insert(block, adresar.get(index));
+            block = b;
+        }
+
     }
 
     public int getIndex(Record record) {
+        return getIndex(record, hlbka);
+
+    }
+
+    public int getIndex(Record record, int paHlbka) {
         String s = record.getData().getHas();
-        s = s.substring(0, hlbka);
+        s = s.substring(0, paHlbka);
         return Integer.parseInt(s, 2);
 
     }
