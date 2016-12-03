@@ -3,21 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package extenhash;
+package system;
 
 /**
  *
  * @author Jožko
  */
-public class Core {
-
-    private ExtentHash osoby;
-    private Block block;
-
-    public Core() {
-       
-    }
-
-    
-
+public interface IMessage {
+    public void onMessage(Message msg);
 }

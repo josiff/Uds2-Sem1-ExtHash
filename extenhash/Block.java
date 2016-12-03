@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
@@ -23,8 +24,8 @@ public class Block {
     private boolean platny;
     private int recSize;
     private int hlbka;
-    
-    private boolean load; 
+
+    private boolean load;
 
     private final int STORE = 8;
 
@@ -73,10 +74,10 @@ public class Block {
 
     }
 
-    public void clearRec() {
+    private void clearRec() {
         countRec = 0;
         for (int i = 0; i < record.length; i++) {
-            record[i] = null;
+            record[i].setPlatny(false);
         }
 
     }
@@ -221,5 +222,40 @@ public class Block {
         this.load = load;
     }
 
-    
+    public IData find(Record paRec) {
+
+        for (Record rec : record) {
+            if (paRec.getData().equals(rec)) {
+                clearRec();
+                return rec.getData();
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Vrati zoznam recordov v node
+     *
+     * @param adresa
+     * @return
+     */
+    public DefaultMutableTreeNode getRecOfBlock(int adresa) {
+
+        DefaultMutableTreeNode node
+                = new DefaultMutableTreeNode(String.format("Adresa: %s, Hĺbka: %s,Počet záznamov: %d ",
+                                adresa, getHlbka(), countRec));
+
+        for (Record rec : record) {
+            if (rec.isPlatny()) {
+                node.add(new DefaultMutableTreeNode(rec.getData().getTreeString()));
+
+            }
+        }
+        clearRec();
+        return node;
+
+    }
+
 }

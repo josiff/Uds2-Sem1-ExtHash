@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package extenhash;
+package model;
 
+import extenhash.IData;
+import extenhash.Record;
 import java.util.BitSet;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,13 +18,14 @@ import java.io.IOException;
  *
  * @author Jožko
  */
-public class Osoba implements IData {
+public class Mesto implements IData {
 
-    private String meno;
+    private String meno; // 35
+    private String przv; // 35
     private int cis;
     private String key;
 
-    public Osoba(String meno, String key) {
+    public Mesto(String meno, String key) {
 
         this.meno = meno;
         this.key = key;
@@ -30,12 +33,12 @@ public class Osoba implements IData {
 
     }
 
-    public Osoba() {
+    public Mesto() {
 
     }
 
     @Override
-    public BitSet getHash(int pocet) {
+    public BitSet getHash() {
 
         String str = Integer.toBinaryString(cis);
         BitSet bs = new BitSet();
@@ -81,7 +84,7 @@ public class Osoba implements IData {
 
     @Override
     public boolean equals(Record record) {
-        Osoba os = (Osoba) record.getData();
+        Mesto os = (Mesto) record.getData();
         return meno == os.getMeno();
     }
 
@@ -95,28 +98,17 @@ public class Osoba implements IData {
 
     @Override
     public String toString() {
-        return meno + " " + cis + " | " + key ;
-    }
-
-    @Override
-    public String getHas() {
-        /*String str = Integer.toBinaryString(cis);
-         if (str.length() >= 8) {
-
-         return str;
-         } else {
-
-         int pom = 8 - str.length();
-         String s = "00000000";
-         s = s.substring(0, pom);
-         return s + str;
-         }*/
-        return key;
+        return meno + " " + cis + " | " + key;
     }
 
     @Override
     public IData newRecord() {
-        return new Osoba();
+        return new Mesto();
+    }
+
+    @Override
+    public String getTreeString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

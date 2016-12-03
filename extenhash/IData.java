@@ -13,7 +13,7 @@ import java.util.BitSet;
  */
 public interface IData {
 
-    BitSet getHash(int pocet);
+    BitSet getHash();
 
     byte[] getByteArray();
 
@@ -23,7 +23,7 @@ public interface IData {
 
     boolean equals(Record record);
 
-    String getHas();
+    String getTreeString();
 
     IData newRecord();
 }

@@ -5,16 +5,18 @@
  */
 package extenhash;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -28,10 +30,13 @@ public class ExtentHash {
     private RandomAccessFile raf;
     private Block block;
 
+    private String file;
+
     public ExtentHash(String file, Record record, int pocetZaznamov) {
         block = new Block(pocetZaznamov, record);
         adresar = new ArrayList();
         hlbka = 1;
+        this.file = file;
         try {
             raf = new RandomAccessFile(file, "rw");
         } catch (FileNotFoundException ex) {
@@ -39,7 +44,7 @@ public class ExtentHash {
         }
     }
 
-    public int insert(Block block, int adresa) {
+    private int insert(Block block, int adresa) {
 
         try {
             raf.seek(adresa);
@@ -80,14 +85,6 @@ public class ExtentHash {
             pom.add(adresar.get(i));
             pom.add(adresar.get(i));
 
-            /*if (i != index) {
-                
-             } else {
-             pom.add(adresar.get(index));
-             index = 2 * i;
-             pom.add(block.getSize() + max);
-
-             }*/
         }
         adresar = pom;
 
@@ -196,9 +193,14 @@ public class ExtentHash {
     }
 
     public int getIndex(Record record, int paHlbka) {
-        String s = record.getData().getHas();
-        s = s.substring(0, paHlbka);
-        return Integer.parseInt(s, 2);
+        BitSet bs = record.getData().getHash();
+        StringBuilder sb = new StringBuilder();
+        int size = bs.size() - 1;
+        for (int i = 0; i < paHlbka; i++) {
+            sb.append(bs.get(size - i) == true ? "1" : "0");
+        }
+
+        return Integer.parseInt(sb.toString(), 2);
 
     }
 
@@ -209,6 +211,53 @@ public class ExtentHash {
             System.out.println("Block s adresou: " + cis);
             System.out.println(block.getAktStav());
         }
+
+    }
+
+    /**
+     * Najde record
+     *
+     * @param record
+     * @return
+     */
+    public IData find(Record record) {
+        if (adresar.isEmpty()) {
+            return null;
+        }
+
+        int index = getIndex(record);
+
+        int adresa = adresar.get(index);
+        block.fromArray(read(adresa, block.getSize()));
+
+        return block.find(record);
+    }
+
+    /**
+     * Vrati stromovy vypis blokov
+     *
+     * @return
+     */
+    public DefaultTreeModel getTreModel() {
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(file);
+        DefaultTreeModel model = new DefaultTreeModel(root);
+
+        int sum = 0;
+        int pom = Integer.MIN_VALUE;
+        for (Integer cis : adresar) {
+            if (pom != cis) {
+                
+                block.fromArray(read(cis, block.getSize()));
+                sum += block.getCountRec();
+                root.add(block.getRecOfBlock(cis));
+                pom = cis;
+            }
+
+        }
+        System.out.println(sum);
+
+        return model;
 
     }
 
