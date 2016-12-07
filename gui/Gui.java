@@ -5,19 +5,21 @@
  */
 package gui;
 
+import com.sun.corba.se.impl.encoding.CodeSetConversion;
 import java.util.Calendar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import system.Core;
 import system.IMessage;
+import system.IProgresUi;
 import system.Message;
 
 /**
  *
  * @author Jožko
  */
-public class Gui extends javax.swing.JFrame implements IMessage {
+public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
 
     private Core core;
 
@@ -28,6 +30,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
         initComponents();
         this.core = new Core();
         core.addMsgListener(this);
+        core.getGenerator().addProgListener(this);
 
     }
 
@@ -76,13 +79,16 @@ public class Gui extends javax.swing.JFrame implements IMessage {
         btnSaveVz = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
-        txtHladajOsob1 = new javax.swing.JTextField();
+        txtHladajVozEvc = new javax.swing.JTextField();
         btnFindVz = new javax.swing.JButton();
         btnEditVz = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        areaVoz = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
         daEk = new datechooser.beans.DateChooserCombo();
+        txtVinHladaj = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        btnFindVzVin = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
@@ -94,6 +100,10 @@ public class Gui extends javax.swing.JFrame implements IMessage {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        txtTestPoc = new javax.swing.JTextField();
+        btnTestuj = new javax.swing.JButton();
+        prgGener = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -180,7 +190,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(txtHladajOsob, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                        .addComponent(txtHladajOsob, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnFindOs, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -227,22 +237,30 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                             .addComponent(btnFindOs))
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Osoby", jPanel1);
 
         jLabel7.setText("EVČ");
 
+        txtSpz.setName("vozidlo"); // NOI18N
+
         jLabel8.setText("VIN");
 
+        txtVin.setName("vozidlo"); // NOI18N
+
         jLabel9.setText("Počet náprav");
+
+        txtPocNaprav.setName("vozidlo"); // NOI18N
 
         jLabel10.setText("Koniec platnosti STK");
 
         tbHladane.setText("hladané vozidlo");
 
         jLabel11.setText("Hmotnosť");
+
+        txtHmotnost.setName("vozidlo"); // NOI18N
 
         btnSaveVz.setText("Ulož");
         btnSaveVz.addActionListener(new java.awt.event.ActionListener() {
@@ -269,108 +287,145 @@ public class Gui extends javax.swing.JFrame implements IMessage {
             }
         });
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        areaVoz.setColumns(20);
+        areaVoz.setRows(5);
+        jScrollPane2.setViewportView(areaVoz);
 
         jLabel13.setText("Koniec platnosti EK");
+
+        jLabel16.setText("VIN");
+
+        btnFindVzVin.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jožko\\Documents\\NetBeansProjects\\ExtenHash\\find.png")); // NOI18N
+        btnFindVzVin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindVzVinActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSaveVz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 4, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                                .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSaveVz, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbHladane)
-                            .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel13))
-                        .addGap(24, 24, 24)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                                .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                                .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                                .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtHladajOsob1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnFindVz, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditVz, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2))
-                .addContainerGap())
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtVinHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnFindVzVin, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtHladajVozEvc, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(btnFindVz, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
+                                .addComponent(btnEditVz, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)
-                            .addComponent(txtHladajOsob1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbHladane)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10))
-                        .addGap(5, 5, 5)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSaveVz))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnEditVz, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnFindVz))
-                        .addGap(14, 14, 14)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel7))
+                            .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel8))
+                            .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel9))
+                            .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel11))
+                            .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2)
+                        .addComponent(tbHladane)
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel10))
+                            .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel13))
+                            .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)
+                        .addComponent(btnSaveVz))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel12))
+                            .addComponent(txtHladajVozEvc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnFindVz)
+                            .addComponent(btnEditVz))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel16)
+                                .addComponent(txtVinHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnFindVzVin))
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         jTabbedPane1.addTab("Vozidlo", jPanel2);
@@ -400,7 +455,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                         .addComponent(cbFile, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtTreeExport)
-                        .addGap(0, 396, Short.MAX_VALUE)))
+                        .addGap(0, 397, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -411,7 +466,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                     .addComponent(txtTreeExport)
                     .addComponent(cbFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -447,7 +502,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                     .addComponent(txtPocVoz, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(339, Short.MAX_VALUE))
+                .addContainerGap(340, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,10 +520,46 @@ public class Gui extends javax.swing.JFrame implements IMessage {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtPocVoz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15))))
-                .addContainerGap(258, Short.MAX_VALUE))
+                .addContainerGap(264, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Nastavenia", jPanel4);
+
+        txtTestPoc.setText("100");
+
+        btnTestuj.setText("Testuj");
+        btnTestuj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTestujActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(prgGener, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(txtTestPoc, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnTestuj)
+                .addContainerGap(399, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTestPoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTestuj))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(prgGener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(269, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Test", jPanel5);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -542,36 +633,101 @@ public class Gui extends javax.swing.JFrame implements IMessage {
 
     }//GEN-LAST:event_btnFindOsActionPerformed
 
-    private void btnSaveVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveVzActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveVzActionPerformed
-
-    private void btnFindVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindVzActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFindVzActionPerformed
-
-    private void btnEditVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditVzActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEditVzActionPerformed
-
     /**
      * Zobrazenie soboru v strome
-     * @param evt 
+     *
+     * @param evt
      */
     private void txtTreeExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTreeExportActionPerformed
 
-        tree.setModel(core.getFileVypis("osoby"));
+        String txt = cbFile.getSelectedItem().toString();
+        tree.setModel(core.getFileVypis(txt));
 
 
     }//GEN-LAST:event_txtTreeExportActionPerformed
 
     /**
      * Generovanie dat
-     * @param evt 
+     *
+     * @param evt
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         core.generujData(getInt(txtPocOsob.getText()), getInt(txtPocVoz.getText()));
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnTestujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestujActionPerformed
+
+        Thread tr = new Thread() {
+            public void run() {
+
+                core.testujData(getInt(txtTestPoc.getText()));
+
+            }
+
+        };
+
+        tr.start();
+
+       // core.testujData(getInt(txtTestPoc.getText()));
+
+    }//GEN-LAST:event_btnTestujActionPerformed
+
+    /**
+     * Hladanie vozidla podla VIN
+     *
+     * @param evt
+     */
+    private void btnFindVzVinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindVzVinActionPerformed
+
+        String str = txtVinHladaj.getText();
+
+        if (str.isEmpty()) {
+            core.setErrMsg("Nevyplnili ste VIN vozidla");
+        } else {
+
+            areaVoz.setText(core.findVozidloVIN(str));
+
+        }
+
+    }//GEN-LAST:event_btnFindVzVinActionPerformed
+
+    private void btnEditVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditVzActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEditVzActionPerformed
+
+    /**
+     * Hladanie vozidla podla EVC
+     *
+     * @param evt
+     */
+    private void btnFindVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindVzActionPerformed
+        String str = txtHladajVozEvc.getText();
+
+        if (str.isEmpty()) {
+            core.setErrMsg("Nevyplnili ste EVČ vozidla");
+        } else {
+            areaVoz.setText(core.findVozidloEvc(str));
+
+        }
+    }//GEN-LAST:event_btnFindVzActionPerformed
+
+    /**
+     * Ulozenie vozidla
+     *
+     * @param evt
+     */
+    private void btnSaveVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveVzActionPerformed
+
+        core.addVozidlo(txtSpz.getText(),
+                txtVin.getText(),
+                getInt(txtPocNaprav.getText()),
+                getInt(txtHmotnost.getText()),
+                tbHladane.isSelected(),
+                daStk.getCurrent(),
+                daEk.getCurrent());
+
+        clearComponets(jPanel2, "vozidlo");
+    }//GEN-LAST:event_btnSaveVzActionPerformed
 
     /**
      * @param args the command line arguments
@@ -610,12 +766,15 @@ public class Gui extends javax.swing.JFrame implements IMessage {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaOs;
+    private javax.swing.JTextArea areaVoz;
     private javax.swing.JButton btnEditOs;
     private javax.swing.JButton btnEditVz;
     private javax.swing.JButton btnFindOs;
     private javax.swing.JButton btnFindVz;
+    private javax.swing.JButton btnFindVzVin;
     private javax.swing.JButton btnSaveOs;
     private javax.swing.JButton btnSaveVz;
+    private javax.swing.JButton btnTestuj;
     private javax.swing.JComboBox cbFile;
     private datechooser.beans.DateChooserCombo daEk;
     private datechooser.beans.DateChooserCombo daPlatnost;
@@ -628,6 +787,7 @@ public class Gui extends javax.swing.JFrame implements IMessage {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -640,19 +800,20 @@ public class Gui extends javax.swing.JFrame implements IMessage {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JProgressBar prgGener;
     private javax.swing.JCheckBox tbHladane;
     private javax.swing.JCheckBox tbVedenie;
     private javax.swing.JTree tree;
     private javax.swing.JTextField txtEvcOs;
     private javax.swing.JTextField txtHladajOsob;
-    private javax.swing.JTextField txtHladajOsob1;
+    private javax.swing.JTextField txtHladajVozEvc;
     private javax.swing.JTextField txtHmotnost;
     private javax.swing.JTextField txtMeno;
     private javax.swing.JTextField txtPocNaprav;
@@ -661,8 +822,10 @@ public class Gui extends javax.swing.JFrame implements IMessage {
     private javax.swing.JTextField txtPriestupky;
     private javax.swing.JTextField txtPrzv;
     private javax.swing.JTextField txtSpz;
+    private javax.swing.JTextField txtTestPoc;
     private javax.swing.JButton txtTreeExport;
     private javax.swing.JTextField txtVin;
+    private javax.swing.JTextField txtVinHladaj;
     // End of variables declaration//GEN-END:variables
 
     public int getInt(String str) {
@@ -681,6 +844,11 @@ public class Gui extends javax.swing.JFrame implements IMessage {
     public void onMessage(Message msg) {
         String title = msg.getType() == Message.ERROR ? "Chyba" : "Info";
         JOptionPane.showMessageDialog(this, msg.getMsg(), title, msg.getType());
+    }
+
+    @Override
+    public void viewProgres(int count) {
+        prgGener.setValue(count);
     }
 
 }

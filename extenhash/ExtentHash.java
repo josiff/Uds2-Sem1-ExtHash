@@ -7,6 +7,7 @@ package extenhash;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -32,14 +33,24 @@ public class ExtentHash {
 
     private String file;
 
+    private static final int MAX_HLBKA = 20;
+
     public ExtentHash(String file, Record record, int pocetZaznamov) {
         block = new Block(pocetZaznamov, record);
         adresar = new ArrayList();
         hlbka = 1;
         this.file = file;
         try {
+
+            PrintWriter pr = new PrintWriter(file);
+            pr.write("");
+            pr.close();
+
             raf = new RandomAccessFile(file, "rw");
+
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -95,14 +106,14 @@ public class ExtentHash {
         return hlbka;
     }
 
-    public void insert(Record record) {
+    public boolean insert(Record record) {
 
         boolean flag = false;
         int adresa = 0;
         int index = 0;
+
         while (flag == false) {
 
-            /*todo hash*/
             index = getIndex(record);
 
             if (adresar.isEmpty()) {
@@ -114,7 +125,7 @@ public class ExtentHash {
                     adresar.add(0);
                 }
                 block.add(record);
-                insert(block, index * block.getSize());
+                insert(block, adresar.get(index));
                 flag = true;
             } else {
 
@@ -129,14 +140,17 @@ public class ExtentHash {
                 if (block.isFull()) {
 
                     if (block.getHlbka() == getHlbka()) {
+                        if (hlbka >= MAX_HLBKA) {
+                            //System.out.println("Plny adresar" + hlbka + " " + record.getData().getTreeString());
+                            block.clearRec();
+                            /*  System.out.println(adresar.size());*/
+                            return false;
 
+                        }
                         rozsirAdresy(index);
-                        index = 2 * index;
 
-                        //ulozim zmenenu hlbku
-                        //insert(block, adresa);
                     }
-                    rozdelBlock(record, index);
+                    rozdelBlock(record, adresa);
 
                 } else {
                     block.add(record);
@@ -148,11 +162,16 @@ public class ExtentHash {
             }
         }
 
+        return flag;
+
     }
 
-    public void rozdelBlock(Record record, int index) {
-        block.setHlbka(block.getHlbka() + 1);
+    public void rozdelBlock(Record record, int paAdresa) {
+        int min = getIndexMin(record, block.getHlbka(), hlbka);
+        int max = getIndexMax(record, block.getHlbka(), hlbka);
 
+        int index = getIndexMin(record, block.getHlbka(), block.getHlbka() + 1);
+        block.setHlbka(block.getHlbka() + 1);
         Block b = block.copyBlock();
 
         Record[] rec = block.getRecord();
@@ -167,23 +186,15 @@ public class ExtentHash {
         }
 
         int novaAdres = Collections.max(adresar) + block.getSize();
-        for (int i = 0; i < adresar.size(); i++) {
-            if (adresar.get(i) == adresar.get(index)) {
-                int pom = i >>> (hlbka - b.getHlbka());
-                if (pom != index) {
-                    adresar.set(i, novaAdres);
-                }
-            }
+        int end = (int) Math.ceil((max - min) / 2.0);
+        min += end;
+        for (int i = min; i <= max; i++) {
+            adresar.set(i, novaAdres);
         }
 
-        if (getIndex(record) == index) {
-            insert(b, novaAdres);
-            block.setLoad(true);
+        insert(block, paAdresa);
 
-        } else {
-            insert(block, adresar.get(index));
-            block = b;
-        }
+        insert(b, novaAdres);
 
     }
 
@@ -194,13 +205,49 @@ public class ExtentHash {
 
     public int getIndex(Record record, int paHlbka) {
         BitSet bs = record.getData().getHash();
-        StringBuilder sb = new StringBuilder();
-        int size = bs.size() - 1;
-        for (int i = 0; i < paHlbka; i++) {
-            sb.append(bs.get(size - i) == true ? "1" : "0");
+        int num = 0;
+        int index = 0;
+        for (int i = paHlbka - 1; i >= 0; i--) {
+            if (bs.get(i)) {
+                num += Math.pow(2, index);
+            }
+            index++;
         }
+        return num;
 
-        return Integer.parseInt(sb.toString(), 2);
+    }
+
+    public int getIndexMin(Record record, int paHlbka, int novaHlbka) {
+        BitSet bs = record.getData().getHash();
+        int num = 0;
+        int index = novaHlbka - 1;
+        for (int i = 0; i < novaHlbka; i++) {
+            if (i < paHlbka) {
+                if (bs.get(i)) {
+                    num += Math.pow(2, index);
+                }
+            }
+            index--;
+        }
+        return num;
+
+    }
+
+    public int getIndexMax(Record record, int paHlbka, int novaHlbka) {
+        BitSet bs = record.getData().getHash();
+        int num = 0;
+        int index = novaHlbka - 1;
+        for (int i = 0; i < novaHlbka; i++) {
+            if (i < paHlbka) {
+                if (bs.get(i)) {
+                    num += Math.pow(2, index);
+                }
+            } else {
+                num += Math.pow(2, index);
+            }
+            index--;
+        }
+        return num;
 
     }
 
@@ -247,7 +294,7 @@ public class ExtentHash {
         int pom = Integer.MIN_VALUE;
         for (Integer cis : adresar) {
             if (pom != cis) {
-                
+
                 block.fromArray(read(cis, block.getSize()));
                 sum += block.getCountRec();
                 root.add(block.getRecOfBlock(cis));

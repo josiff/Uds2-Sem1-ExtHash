@@ -54,22 +54,10 @@ public class Osoba implements IData {
     @Override
     public BitSet getHash() {
         //todo
-        // byte[] bytes = Integer.toBinaryString(evc).getBytes();
+        byte[] bytes = String.valueOf(evc).getBytes();
+        BitSet bs = BitSet.valueOf(bytes);
+        
 
-        String str = Integer.toBinaryString(evc);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 10 - str.length(); i++) {
-            sb.append("0");
-        }
-        str = sb.toString() + str;
-        BitSet bs = new BitSet(10);
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == '1') {
-                bs.set((bs.size() - 1) - i);
-            }
-        }
-
-        //bs.set(evc);
         return bs;
     }
 

@@ -50,11 +50,14 @@ public class Vozidlo implements IData {
     public Vozidlo() {
     }
 
+    public Vozidlo(String evc) {
+        this.evc = evc;
+    }
+
     @Override
     public BitSet getHash() {
 
-        String str = Integer.toBinaryString(5);
-        return BitSet.valueOf(str.getBytes());
+        return BitSet.valueOf(evc.getBytes());
 
     }
 
@@ -183,6 +186,17 @@ public class Vozidlo implements IData {
     @Override
     public String getTreeString() {
         return String.format("Evc: %s, VIN: %s", evc, vin);
+    }
+
+    @Override
+    public String toString() {
+        String txt = "Vozidlo EVČ: " + evc + " VIN: " + vin + "\n";
+        txt += "Koniec platnosti STK: " + sf.format(endStk.getTime()) + "\n";
+        txt += "Koniec platnosti EK: " + sf.format(endEk.getTime()) + "\n";
+        txt += "Hladané: " + (hladane == true ? "áno" : "nie") + "\n";
+        txt += "Hmotnoť:" + hmotnost + " Počet náprav: " + napravy;
+
+        return txt;
     }
 
 }

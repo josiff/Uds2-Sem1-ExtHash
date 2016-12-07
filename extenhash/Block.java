@@ -48,7 +48,7 @@ public class Block {
         this.size = (block.getRecord().length * block.getRecSize()) + STORE;
         this.recSize = block.getRecSize();
         this.hlbka = block.getHlbka();
-        load = true;
+        load = false;
         for (int i = 0; i < record.length; i++) {
             this.record[i] = new Record(block.getRecord()[i].getData());
             this.record[i].setPlatny(block.getRecord()[i].isPlatny());
@@ -74,7 +74,7 @@ public class Block {
 
     }
 
-    private void clearRec() {
+    public void clearRec() {
         countRec = 0;
         for (int i = 0; i < record.length; i++) {
             record[i].setPlatny(false);

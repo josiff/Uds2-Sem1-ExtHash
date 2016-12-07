@@ -33,15 +33,17 @@ public class Core {
     private SimpleDateFormat sf;
     private Generator generator;
 
-    private final int POC_RECORDOV = 5;
+    private final int POC_RECORDOV_OS = 5;
+    private final int POC_RECORDOV_EVC = 4;
+    private final int POC_RECORDOV_VIN = 3;
 
     public Core() {
 
         msg = new Message();
         imesageListener = new ArrayList<>();
-        osoby = new ExtentHash("Osoby.txt", new Record(new Osoba()), POC_RECORDOV);
-        vozidlaEvc = new ExtentHash("VozidlaEvc.txt", new Record(new Vozidlo()), POC_RECORDOV);
-        vozidlaVin = new ExtentHash("VozidlaVin.txt", new Record(new VozidloVIN()), POC_RECORDOV);
+        osoby = new ExtentHash("Osoby.txt", new Record(new Osoba()), POC_RECORDOV_OS);
+        vozidlaEvc = new ExtentHash("VozidlaEvc.txt", new Record(new Vozidlo()), POC_RECORDOV_EVC);
+        vozidlaVin = new ExtentHash("VozidlaVin.txt", new Record(new VozidloVIN()), POC_RECORDOV_VIN);
         this.sf = new SimpleDateFormat("dd.MM.yyyy");
         generator = new Generator();
 
@@ -66,24 +68,26 @@ public class Core {
 
     /**
      * Prida osobu
+     *
      * @param meno
      * @param przv
      * @param evc
      * @param endPlatnost
      * @param zakaz
-     * @param priestupky 
+     * @param priestupky
      */
     public void addOsobu(String meno, String przv, int evc, Calendar endPlatnost, boolean zakaz, int priestupky) {
         Osoba os = new Osoba(meno, przv, evc, endPlatnost, zakaz, priestupky);
         osoby.insert(new Record(os));
-       // setInfoMsg("Záznam bol uložený");
+        // setInfoMsg("Záznam bol uložený");
 
     }
 
     /**
      * Najde osobu
+     *
      * @param evc
-     * @return 
+     * @return
      */
     public String findOsobu(int evc) {
 
@@ -98,18 +102,82 @@ public class Core {
     }
 
     /**
+     * Vlozi vozidlo do suboru
+     *
+     * @param evc
+     * @param vin
+     * @param napravy
+     * @param hmotnost
+     * @param hladane
+     * @param endStk
+     * @param endEk
+     */
+    public void addVozidlo(String evc, String vin, int napravy,
+            int hmotnost, boolean hladane, Calendar endStk, Calendar endEk) {
+
+        if (vozidlaEvc.insert(new Record(new Vozidlo(evc, vin, napravy, hmotnost, hladane, endStk, endEk)))) {
+            vozidlaVin.insert(new Record(new VozidloVIN(evc, vin)));
+        }
+
+    }
+
+    /**
+     * Najde vozidlo podla EVC
+     *
+     * @param evc
+     * @return
+     */
+    public String findVozidloEvc(String evc) {
+
+        Vozidlo voz = (Vozidlo) vozidlaEvc.find(new Record(new Vozidlo(evc)));
+        if (voz == null) {
+            setInfoMsg(String.format("Vozidlo s evč: %s sa nenašlo", evc));
+            return "";
+        }
+
+        return voz.toString();
+    }
+
+    public String findVozidloVIN(String vin) {
+
+        VozidloVIN vozVin = (VozidloVIN) vozidlaVin.find(new Record(new VozidloVIN(vin)));
+        if (vozVin == null) {
+            setInfoMsg(String.format("Vozidlo s vin: %s sa nenašlo", vin));
+            return "";
+        }
+
+        return findVozidloEvc(vozVin.getEvc());
+
+    }
+
+    /**
      * Gnerovanie dat
+     *
      * @param pocOsob
-     * @param pocVoz 
+     * @param pocVoz
      */
     public void generujData(int pocOsob, int pocVoz) {
+        long startTime = System.nanoTime();
         generator.generujData(this, pocOsob, pocVoz);
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 60000000000.0;
+        setInfoMsg("Dáta boli vygenerované " + duration);
+    }
+
+    public void testujData(int pocOsob) {
+        long startTime = System.nanoTime();
+        generator.testujData(this, pocOsob);
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 60000000000.0;
+        setInfoMsg("Koniec testovania. Doba testovania>" + duration);
+
     }
 
     /**
      * Vrati vypis suboru v stromovom zobrazeni
+     *
      * @param file
-     * @return 
+     * @return
      */
     public DefaultTreeModel getFileVypis(String file) {
 
@@ -148,6 +216,14 @@ public class Core {
         msg.viewAsInfo();
         msg.setMsg(text);
         showMsg(msg);
+    }
+
+    public ExtentHash getOsoby() {
+        return osoby;
+    }
+
+    public Generator getGenerator() {
+        return generator;
     }
 
 }
