@@ -226,8 +226,10 @@ public class Block {
     public IData find(Record paRec) {
 
         for (Record rec : record) {
-            if (paRec.getData().equals(rec)) {
-                return rec.getData();
+            if (rec.isPlatny()) {
+                if (paRec.getData().equals(rec)) {
+                    return rec.getData();
+                }
             }
         }
 

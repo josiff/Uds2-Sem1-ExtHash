@@ -447,7 +447,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
             }
         });
 
-        cbFile.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "osoby", "vozidlaEvc", "vozidlaVin", " " }));
+        cbFile.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "osoby", "vozidlaEvc", "vozidlaVin" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

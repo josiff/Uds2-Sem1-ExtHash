@@ -35,8 +35,8 @@ public class Core {
     private Generator generator;
 
     private final int POC_RECORDOV_OS = 5;
-    private final int POC_RECORDOV_EVC = 3;
-    private final int POC_RECORDOV_VIN = 5;
+    private final int POC_RECORDOV_EVC = 4;
+    private final int POC_RECORDOV_VIN = 3;
 
     public Core() {
 
