@@ -12,5 +12,7 @@ package system;
 public interface IProgresUi {
 
     void viewProgres(int count);
+    
+    void viewGenProgres(int count);
 
 }

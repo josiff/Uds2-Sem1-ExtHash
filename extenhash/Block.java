@@ -27,13 +27,13 @@ public class Block {
 
     private boolean load;
 
-    private final int STORE = 8;
+    private final int STORE = 4;
 
     public Block(int pocet, Record record) {
         this.record = new Record[pocet];
         countRec = 0;
-        size = (pocet * record.getData().getSize()) + STORE;
-        recSize = record.getData().getSize();
+        size = (pocet * record.getSize()) + STORE;
+        recSize = record.getSize();
         load = false;
 
         for (int i = 0; i < this.record.length; i++) {
@@ -95,7 +95,7 @@ public class Block {
     }
 
     public Record[] fromArray(byte[] b) {
-
+        clearRec();
         int position = 0;
         int pocRecord = 0;
         byte[] pom = new byte[recSize];
@@ -108,22 +108,23 @@ public class Block {
 
         try {
 
-            pocRecord = hlpInStream.readInt();
+            //pocRecord = hlpInStream.readInt();
             hlbka = hlpInStream.readInt();
             if (hlbka == 0) {
                 hlbka = 1;
             }
             int i = 0;
             while (position < b.length) {
-                if (countRec >= pocRecord) {
-                    break;
+                /* if (countRec >= pocRecord) {
+                 break;
 
-                }
+                 }*/
                 System.arraycopy(b, position, pom, 0, recSize);
                 position += recSize;
-                this.record[i].getData().fromByteArray(pom);
-                this.record[i].setPlatny(true);
-                countRec++;
+                this.record[i].fromBArray(pom);
+                if (this.record[i].isPlatny()) {
+                    countRec++;
+                }
                 i++;
 
             }
@@ -143,18 +144,18 @@ public class Block {
         byte[] b = new byte[size];
 
         try {
-            hlpOutStream.writeInt(countRec);
+            // hlpOutStream.writeInt(countRec);
             hlpOutStream.writeInt(hlbka);
             System.arraycopy(hlpByteArrayOutputStream.toByteArray(), 0, b, position, STORE);
             position = STORE;
             for (Record rec : record) {
-                if (rec.isPlatny()) {
-                    System.arraycopy(rec.getData().getByteArray(), 0, b, position, rec.getData().getSize());
-                    position += rec.getData().getSize();
-                    rec.setPlatny(false);
-                    countRec--;
+                /*if (rec.isPlatny()) {*/
+                System.arraycopy(rec.getBArray(), 0, b, position, rec.getSize());
+                position += rec.getSize();
+                //rec.setPlatny(false);
+                //countRec--;
 
-                }
+                //}
             }
 
         } catch (IOException e) {
@@ -226,7 +227,6 @@ public class Block {
 
         for (Record rec : record) {
             if (paRec.getData().equals(rec)) {
-                clearRec();
                 return rec.getData();
             }
         }
@@ -234,14 +234,31 @@ public class Block {
         return null;
 
     }
-    
+
     public boolean change(Record paRec) {
 
         for (Record rec : record) {
             if (paRec.getData().equals(rec)) {
                 //clearRec();
-                 rec.setData(paRec.getData());
-                 return true;
+                rec.setData(paRec.getData());
+
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public boolean remove(Record paRec) {
+
+        for (Record rec : record) {
+            if (paRec.getData().equals(rec)) {
+                //clearRec();
+                rec.setPlatny(false);
+                countRec--;
+
+                return true;
             }
         }
 
@@ -267,9 +284,13 @@ public class Block {
 
             }
         }
-        clearRec();
+        //clearRec();
         return node;
 
+    }
+
+    public boolean isPlatny() {
+        return platny;
     }
 
 }

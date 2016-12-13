@@ -34,9 +34,9 @@ public class Core {
     private SimpleDateFormat sf;
     private Generator generator;
 
-    private final int POC_RECORDOV_OS = 50;
-    private final int POC_RECORDOV_EVC = 4;
-    private final int POC_RECORDOV_VIN = 3;
+    private final int POC_RECORDOV_OS = 5;
+    private final int POC_RECORDOV_EVC = 3;
+    private final int POC_RECORDOV_VIN = 5;
 
     public Core() {
 
@@ -83,7 +83,7 @@ public class Core {
         // setInfoMsg("Záznam bol uložený");
 
     }
-    
+
     public void changeOsobu(String meno, String przv, int evc, Calendar endPlatnost, boolean zakaz, int priestupky) {
         Osoba os = new Osoba(meno, przv, evc, endPlatnost, zakaz, priestupky);
         osoby.change(new Record(os));
@@ -135,10 +135,20 @@ public class Core {
     public void addVozidlo(String evc, String vin, int napravy,
             int hmotnost, boolean hladane, Calendar endStk, Calendar endEk) {
 
-        if (vozidlaEvc.insert(new Record(new Vozidlo(evc, vin, napravy, hmotnost, hladane, endStk, endEk)))) {
-            vozidlaVin.insert(new Record(new VozidloVIN(evc, vin)));
+        Record rec = new Record(new Vozidlo(evc, vin, napravy, hmotnost, hladane, endStk, endEk));
+        if (vozidlaEvc.insert(rec)) {
+            if (vozidlaVin.insert(new Record(new VozidloVIN(evc, vin))) == false) {
+                rec.setPlatny(false);
+                vozidlaEvc.remove(rec);
+                System.out.println(rec.getData().getTreeString());
+            }
         }
 
+    }
+
+    public void changeVoz(String evc, String vin, int napravy,
+            int hmotnost, boolean hladane, Calendar endStk, Calendar endEk) {
+        vozidlaEvc.change(new Record(new Vozidlo(evc, vin, napravy, hmotnost, hladane, endStk, endEk)));
     }
 
     /**
@@ -149,13 +159,25 @@ public class Core {
      */
     public String findVozidloEvc(String evc) {
 
-        Vozidlo voz = (Vozidlo) vozidlaEvc.find(new Record(new Vozidlo(evc)));
+        Vozidlo voz = findVizidloE(evc);
         if (voz == null) {
-            setInfoMsg(String.format("Vozidlo s evč: %s sa nenašlo", evc));
+            //setInfoMsg(String.format("Vozidlo s evč: %s sa nenašlo", evc));
             return "";
         }
 
         return voz.toString();
+    }
+
+    public Vozidlo findVizidloE(String evc) {
+
+        Vozidlo voz = (Vozidlo) vozidlaEvc.find(new Record(new Vozidlo(evc)));
+        if (voz == null) {
+            setInfoMsg(String.format("Vozidlo s evč: %s sa nenašlo", evc));
+
+        }
+
+        return voz;
+
     }
 
     public String findVozidloVIN(String vin) {

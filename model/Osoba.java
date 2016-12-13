@@ -56,7 +56,6 @@ public class Osoba implements IData {
         //todo
         byte[] bytes = String.valueOf(evc).getBytes();
         BitSet bs = BitSet.valueOf(bytes);
-        
 
         return bs;
     }
@@ -71,7 +70,11 @@ public class Osoba implements IData {
             hlpOutStream.writeUTF(String.format("%35s", this.meno));
             hlpOutStream.writeUTF(String.format("%35s", this.przv));
             hlpOutStream.writeInt(evc);
-            hlpOutStream.writeUTF(sf.format(endPlatnost.getTime()));
+            if (endPlatnost != null) {
+                hlpOutStream.writeUTF(sf.format(endPlatnost.getTime()));
+            } else {
+                hlpOutStream.writeUTF(String.format("%10s", ""));
+            }
             hlpOutStream.writeBoolean(this.zakaz);
             hlpOutStream.writeInt(this.priestupky);
 
@@ -91,12 +94,16 @@ public class Osoba implements IData {
             this.meno = hlpInStream.readUTF().trim();
             this.przv = hlpInStream.readUTF().trim();
             this.evc = hlpInStream.readInt();
-            this.endPlatnost = Calendar.getInstance();
-            this.endPlatnost.setTime(sf.parse(hlpInStream.readUTF()));
+            String time = hlpInStream.readUTF().trim();
+            if (!time.isEmpty()) {
+                this.endPlatnost = Calendar.getInstance();
+                this.endPlatnost.setTime(sf.parse(time));
+            }
             this.zakaz = hlpInStream.readBoolean();
             this.priestupky = hlpInStream.readInt();
 
         } catch (IOException e) {
+            
             throw new IllegalStateException("Error during conversion from byte array.");
         } catch (ParseException ex) {
             Logger.getLogger(Osoba.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,7 +178,5 @@ public class Osoba implements IData {
     public int getPriestupky() {
         return priestupky;
     }
-    
-    
 
 }

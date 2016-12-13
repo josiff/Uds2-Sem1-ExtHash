@@ -74,9 +74,16 @@ public class Vozidlo implements IData {
             hlpOutStream.writeInt(this.napravy);
             hlpOutStream.writeInt(this.hmotnost);
             hlpOutStream.writeBoolean(this.hladane);
-            hlpOutStream.writeUTF(sf.format(endStk.getTime()));
-            hlpOutStream.writeUTF(sf.format(endEk.getTime()));
-
+            if (endStk != null) {
+                hlpOutStream.writeUTF(sf.format(endStk.getTime()));
+            } else {
+                hlpOutStream.writeUTF(String.format("%10s", ""));
+            }
+            if (endEk != null) {
+                hlpOutStream.writeUTF(sf.format(endEk.getTime()));
+            } else {
+                hlpOutStream.writeUTF(String.format("%10s", ""));
+            }
             return hlpByteArrayOutputStream.toByteArray();
 
         } catch (IOException e) {
@@ -97,12 +104,16 @@ public class Vozidlo implements IData {
             this.napravy = hlpInStream.readInt();
             this.hmotnost = hlpInStream.readInt();
             this.hladane = hlpInStream.readBoolean();
-            this.endStk = Calendar.getInstance();
-            this.endStk.setTime(sf.parse(hlpInStream.readUTF()));
-
-           /* this.endEk = Calendar.getInstance();
-            this.endEk.setTime(sf.parse(hlpInStream.readUTF()));*/
-
+            String time = hlpInStream.readUTF().trim();
+            if (!time.isEmpty()) {
+                this.endStk = Calendar.getInstance();
+                this.endStk.setTime(sf.parse(time));
+            }
+            time = hlpInStream.readUTF().trim();
+            if (!time.isEmpty()) {
+                this.endEk = Calendar.getInstance();
+                this.endEk.setTime(sf.parse(time));
+            }
         } catch (IOException e) {
             throw new IllegalStateException("Error during conversion from byte array.");
         } catch (ParseException ex) {

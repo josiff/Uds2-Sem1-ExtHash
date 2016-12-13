@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import model.Osoba;
+import model.Vozidlo;
 import system.Core;
 import system.IMessage;
 import system.IProgresUi;
@@ -31,6 +32,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         initComponents();
         this.core = new Core();
         core.addMsgListener(this);
+        core.getGenerator().addGenDataListener(this);
         core.getGenerator().addProgListener(this);
 
     }
@@ -101,6 +103,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        prgGen = new javax.swing.JProgressBar();
         jPanel5 = new javax.swing.JPanel();
         txtTestPoc = new javax.swing.JTextField();
         btnTestuj = new javax.swing.JButton();
@@ -495,16 +498,21 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel15))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtPocOsob)
-                    .addComponent(txtPocVoz, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(prgGen, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel15))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPocOsob)
+                            .addComponent(txtPocVoz, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap(340, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -523,7 +531,9 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtPocVoz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15))))
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(prgGen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(220, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Nastavenia", jPanel4);
@@ -676,6 +686,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
 
         String txt = cbFile.getSelectedItem().toString();
         tree.setModel(core.getFileVypis(txt));
+        tree.setEditable(true);
 
 
     }//GEN-LAST:event_txtTreeExportActionPerformed
@@ -688,14 +699,14 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Thread tr = new Thread() {
             public void run() {
-
+                core.generujData(getInt(txtPocOsob.getText()), getInt(txtPocVoz.getText()));
             }
 
         };
 
         tr.start();
 
-        core.generujData(getInt(txtPocOsob.getText()), getInt(txtPocVoz.getText()));
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnTestujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestujActionPerformed
@@ -711,7 +722,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
 
         tr.start();
 
-       // core.testujData(getInt(txtTestPoc.getText()));
+        //core.testujData(getInt(txtTestPoc.getText()));
 
     }//GEN-LAST:event_btnTestujActionPerformed
 
@@ -735,7 +746,27 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     }//GEN-LAST:event_btnFindVzVinActionPerformed
 
     private void btnEditVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditVzActionPerformed
-        // TODO add your handling code here:
+        String str = txtHladajVozEvc.getText();
+
+        if (str.isEmpty()) {
+            core.setErrMsg("Nevyplnili ste EVČ vozidla");
+        } else {
+
+            Vozidlo voz = core.findVizidloE(str);
+            if (voz != null) {
+                txtSpz.setEditable(false);
+                txtSpz.setText(voz.getEvc());
+                txtVin.setEditable(false);
+                txtVin.setText(voz.getVin());
+                txtPocNaprav.setText(String.valueOf(voz.getNapravy()));
+                txtHmotnost.setText(String.valueOf(voz.getHmotnost()));
+                tbHladane.setSelected(voz.isHladane());
+                daStk.setCurrent(voz.getEndStk());
+                daEk.setCurrent(voz.getEndEk());
+
+            }
+
+        }
     }//GEN-LAST:event_btnEditVzActionPerformed
 
     /**
@@ -761,15 +792,29 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
      */
     private void btnSaveVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveVzActionPerformed
 
-        core.addVozidlo(txtSpz.getText(),
-                txtVin.getText(),
-                getInt(txtPocNaprav.getText()),
-                getInt(txtHmotnost.getText()),
-                tbHladane.isSelected(),
-                daStk.getCurrent(),
-                daEk.getCurrent());
+        if (!txtSpz.isEditable()) {
+            txtSpz.setEditable(true);
+            txtVin.setEditable(true);
+            core.changeVoz(txtSpz.getText(),
+                    txtVin.getText(),
+                    getInt(txtPocNaprav.getText()),
+                    getInt(txtHmotnost.getText()),
+                    tbHladane.isSelected(),
+                    daStk.getCurrent(),
+                    daEk.getCurrent());
+        } else {
+            core.addVozidlo(txtSpz.getText(),
+                    txtVin.getText(),
+                    getInt(txtPocNaprav.getText()),
+                    getInt(txtHmotnost.getText()),
+                    tbHladane.isSelected(),
+                    daStk.getCurrent(),
+                    daEk.getCurrent());
+        }
 
         clearComponets(jPanel2, "vozidlo");
+
+        clearComponets(jPanel1, "osoba");
     }//GEN-LAST:event_btnSaveVzActionPerformed
 
     /**
@@ -850,6 +895,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JProgressBar prgGen;
     private javax.swing.JProgressBar prgGener;
     private javax.swing.JCheckBox tbHladane;
     private javax.swing.JCheckBox tbVedenie;
@@ -893,5 +939,11 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     public void viewProgres(int count) {
         prgGener.setValue(count);
     }
+
+    @Override
+    public void viewGenProgres(int count) {
+        prgGen.setValue(count);
+    }
+    
 
 }

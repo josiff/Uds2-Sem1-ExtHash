@@ -106,6 +106,11 @@ public class ExtentHash {
         return hlbka;
     }
 
+    /**
+     * Insert record to file
+     * @param record
+     * @return 
+     */
     public boolean insert(Record record) {
 
         boolean flag = false;
@@ -310,6 +315,40 @@ public class ExtentHash {
         }
 
         if (block.change(record)) {
+            insert(block, adresa);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    
+    /**
+     * Zmeno recordu v adresari
+     *
+     * @param record
+     * @return
+     */
+    public boolean remove(Record record) {
+
+        if (adresar.isEmpty()) {
+            return false;
+        }
+
+        boolean result = false;
+        if (!block.isEmpty()) {
+            result = block.remove(record);
+        }
+
+        int index = getIndex(record);
+        int adresa = adresar.get(index);
+        if (result == false) {
+
+            block.fromArray(read(adresa, block.getSize()));
+
+        }
+
+        if (block.remove(record)) {
             insert(block, adresa);
             return true;
         } else {
