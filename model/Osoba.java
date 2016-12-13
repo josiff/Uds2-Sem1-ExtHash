@@ -92,7 +92,7 @@ public class Osoba implements IData {
             this.przv = hlpInStream.readUTF().trim();
             this.evc = hlpInStream.readInt();
             this.endPlatnost = Calendar.getInstance();
-            this.endPlatnost.setTime(sf.parse(hlpInStream.readUTF().trim()));
+            this.endPlatnost.setTime(sf.parse(hlpInStream.readUTF()));
             this.zakaz = hlpInStream.readBoolean();
             this.priestupky = hlpInStream.readInt();
 
@@ -155,5 +155,23 @@ public class Osoba implements IData {
         return meno + " " + przv + " " + evc;
         //return getHas();
     }
+
+    public String getPrzv() {
+        return przv;
+    }
+
+    public Calendar getEndPlatnost() {
+        return endPlatnost;
+    }
+
+    public boolean isZakaz() {
+        return zakaz;
+    }
+
+    public int getPriestupky() {
+        return priestupky;
+    }
+    
+    
 
 }

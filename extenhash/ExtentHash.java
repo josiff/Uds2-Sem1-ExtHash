@@ -272,12 +272,50 @@ public class ExtentHash {
             return null;
         }
 
+        IData data = block.find(record);
+        if (data != null) {
+            return data;
+        }
         int index = getIndex(record);
 
         int adresa = adresar.get(index);
         block.fromArray(read(adresa, block.getSize()));
 
         return block.find(record);
+    }
+
+    /**
+     * Zmeno recordu v adresari
+     *
+     * @param record
+     * @return
+     */
+    public boolean change(Record record) {
+
+        if (adresar.isEmpty()) {
+            return false;
+        }
+
+        boolean result = false;
+        if (!block.isEmpty()) {
+            result = block.change(record);
+        }
+
+        int index = getIndex(record);
+        int adresa = adresar.get(index);
+        if (result == false) {
+
+            block.fromArray(read(adresa, block.getSize()));
+
+        }
+
+        if (block.change(record)) {
+            insert(block, adresa);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**

@@ -28,9 +28,9 @@ public class Main {
 
         boolean debg = false;
         if (debg) {
-            for (int i = 1; i < 22; i++) {
+            for (int i = 1; i < 10; i++) {
                 BitSet bs = BitSet.valueOf(String.valueOf(i).getBytes());
-                System.out.println(i + " " + bs.toString() + " " + getIndex(bs, 1));
+                System.out.println(i + " " + bs.toString() + " " + getIndex(bs, 2) + " " + getIndex2(bs, 2));
             }
         } else {
             new gui.Gui().setVisible(true);
@@ -48,6 +48,23 @@ public class Main {
             index--;
         }
         return num;
+
+    }
+
+    public static int getIndex2(BitSet bs, int paHlbka) {
+
+        int cislo2 = 0;
+        int ind = paHlbka - 1;
+        for (int i = 0; i < paHlbka; i++) {
+            if (bs.get(i)) {
+                cislo2 += Math.pow(2, (ind - i));
+            }
+            //     Console.Write(((hassBitArray[i]) ? 1 : 0) + "");
+        }
+
+          //  Console.Write(", bolo prevedene na cislo : \t" + cislo2);
+        // Console.WriteLine();
+        return cislo2;
 
     }
 

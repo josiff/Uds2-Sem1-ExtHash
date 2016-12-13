@@ -7,6 +7,7 @@ package system;
 
 import extenhash.Block;
 import extenhash.ExtentHash;
+import extenhash.IData;
 import extenhash.Record;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Core {
     private SimpleDateFormat sf;
     private Generator generator;
 
-    private final int POC_RECORDOV_OS = 5;
+    private final int POC_RECORDOV_OS = 50;
     private final int POC_RECORDOV_EVC = 4;
     private final int POC_RECORDOV_VIN = 3;
 
@@ -82,6 +83,13 @@ public class Core {
         // setInfoMsg("Záznam bol uložený");
 
     }
+    
+    public void changeOsobu(String meno, String przv, int evc, Calendar endPlatnost, boolean zakaz, int priestupky) {
+        Osoba os = new Osoba(meno, przv, evc, endPlatnost, zakaz, priestupky);
+        osoby.change(new Record(os));
+        // setInfoMsg("Záznam bol uložený");
+
+    }
 
     /**
      * Najde osobu
@@ -91,13 +99,25 @@ public class Core {
      */
     public String findOsobu(int evc) {
 
-        Osoba os = (Osoba) osoby.find(new Record(new Osoba(evc)));
+        Osoba os = findOsobuO(evc);
         if (os == null) {
-            setInfoMsg(String.format("Osoba s evč: %s sa nenašla", evc));
+            //setInfoMsg(String.format("Osoba s evč: %s sa nenašla", evc));
             return "";
         }
 
         return os.toString();
+
+    }
+
+    public Osoba findOsobuO(int evc) {
+
+        Osoba os = (Osoba) osoby.find(new Record(new Osoba(evc)));
+        if (os == null) {
+            setInfoMsg(String.format("Osoba s evč: %s sa nenašla", evc));
+
+        }
+
+        return os;
 
     }
 

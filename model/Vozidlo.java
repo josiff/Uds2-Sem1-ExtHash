@@ -100,8 +100,8 @@ public class Vozidlo implements IData {
             this.endStk = Calendar.getInstance();
             this.endStk.setTime(sf.parse(hlpInStream.readUTF()));
 
-            this.endEk = Calendar.getInstance();
-            this.endEk.setTime(sf.parse(hlpInStream.readUTF()));
+           /* this.endEk = Calendar.getInstance();
+            this.endEk.setTime(sf.parse(hlpInStream.readUTF()));*/
 
         } catch (IOException e) {
             throw new IllegalStateException("Error during conversion from byte array.");

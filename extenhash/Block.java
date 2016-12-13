@@ -234,6 +234,20 @@ public class Block {
         return null;
 
     }
+    
+    public boolean change(Record paRec) {
+
+        for (Record rec : record) {
+            if (paRec.getData().equals(rec)) {
+                //clearRec();
+                 rec.setData(paRec.getData());
+                 return true;
+            }
+        }
+
+        return false;
+
+    }
 
     /**
      * Vrati zoznam recordov v node

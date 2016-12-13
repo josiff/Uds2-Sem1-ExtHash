@@ -6,6 +6,7 @@
 package system;
 
 import extenhash.Record;
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -54,7 +55,7 @@ public class Generator {
 
     public void generujData(Core ct, int pocOsob, int pocVoz) {
 
-        for (int i = 1; i <= pocOsob; i++) {
+       /* for (int i = 1; i <= pocOsob; i++) {
             String str = randomString(CHAR_LENGTH);
 
             ct.addOsobu(randomString(CHAR_LENGTH),
@@ -63,6 +64,19 @@ public class Generator {
                     Calendar.getInstance(),
                     getBool(),
                     rndCis(0, 20));
+
+        }*/
+        
+        for (int i = 0; i <= pocVoz; i++) {
+            
+            ct.addVozidlo(randomString(CHAR_LENGTH),
+                    randomString(CHAR_LENGTH),
+                    rndCis(1, 6),
+                    rndCis(1, 6),
+                    getBool(),
+                    Calendar.getInstance(),
+                    Calendar.getInstance()
+            );
 
         }
 
@@ -94,12 +108,17 @@ public class Generator {
 
         System.out.println("Pocet " + count);
 
+        int poc = 2;
         for (Osoba os : inserData) {
             if (ct.getOsoby().find(new Record(os)) == null) {
                 System.out.println("nenasiel som " + os.toString());
                 break;
             }
+            changeProgres(getStav(pocOsob, poc));
+            poc++;
+
         }
+        changeProgres(100);
 
     }
 

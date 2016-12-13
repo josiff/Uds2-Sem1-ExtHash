@@ -10,6 +10,7 @@ import java.util.Calendar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import model.Osoba;
 import system.Core;
 import system.IMessage;
 import system.IProgresUi;
@@ -373,47 +374,6 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
-                                .addComponent(jLabel7))
-                            .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel8))
-                            .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel9))
-                            .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel11))
-                            .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(2, 2, 2)
-                        .addComponent(tbHladane)
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel10))
-                            .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(5, 5, 5)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel13))
-                            .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(11, 11, 11)
-                        .addComponent(btnSaveVz))
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
                                 .addComponent(jLabel12))
                             .addComponent(txtHladajVozEvc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnFindVz)
@@ -425,7 +385,50 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                                 .addComponent(txtVinHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnFindVzVin))
                         .addGap(10, 10, 10)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(3, 3, 3)
+                                    .addComponent(jLabel7))
+                                .addComponent(txtSpz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(6, 6, 6)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(3, 3, 3)
+                                    .addComponent(jLabel8))
+                                .addComponent(txtVin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(6, 6, 6)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(3, 3, 3)
+                                    .addComponent(jLabel9))
+                                .addComponent(txtPocNaprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(6, 6, 6)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(3, 3, 3)
+                                    .addComponent(jLabel11))
+                                .addComponent(txtHmotnost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(2, 2, 2)
+                            .addComponent(tbHladane)
+                            .addGap(2, 2, 2)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(jLabel10))
+                                .addComponent(daStk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(5, 5, 5)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(jLabel13))
+                                .addComponent(daEk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(11, 11, 11)
+                            .addComponent(btnSaveVz)
+                            .addContainerGap())
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         jTabbedPane1.addTab("Vozidlo", jPanel2);
@@ -583,6 +586,25 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
 
     private void btnEditOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditOsActionPerformed
 
+        String str = txtHladajOsob.getText();
+
+        if (str.isEmpty()) {
+            core.setErrMsg("Nevyplnili ste EVČ osoby");
+        } else {
+            if (getInt(str) > -1) {
+                Osoba os = core.findOsobuO(getInt(txtHladajOsob.getText()));
+                if (os != null) {
+                    txtEvcOs.setEditable(false);
+                    txtEvcOs.setText(String.valueOf(os.getEvc()));
+                    txtMeno.setText(os.getMeno());
+                    txtPrzv.setText(os.getPrzv());
+                    daPlatnost.setCurrent(os.getEndPlatnost());
+                    tbVedenie.setSelected(os.isZakaz());
+                    txtPriestupky.setText(String.valueOf(os.getPriestupky()));
+                }
+            }
+
+        }
     }//GEN-LAST:event_btnEditOsActionPerformed
     /**
      * Ulozenie osoby
@@ -590,14 +612,26 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
      * @param evt
      */
     private void btnSaveOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOsActionPerformed
+
         Calendar date = Calendar.getInstance();
         date.setTime(daPlatnost.getCurrent().getTime());
-        core.addOsobu(txtMeno.getText(),
-                txtPrzv.getText(),
-                getInt(txtEvcOs.getText()),
-                date,
-                tbVedenie.isSelected(),
-                getInt(txtPriestupky.getText()));
+        if (!txtEvcOs.isEditable()) {
+            txtEvcOs.setEditable(true);
+            core.changeOsobu(txtMeno.getText(),
+                    txtPrzv.getText(),
+                    getInt(txtEvcOs.getText()),
+                    date,
+                    tbVedenie.isSelected(),
+                    getInt(txtPriestupky.getText()));
+        } else {
+
+            core.addOsobu(txtMeno.getText(),
+                    txtPrzv.getText(),
+                    getInt(txtEvcOs.getText()),
+                    date,
+                    tbVedenie.isSelected(),
+                    getInt(txtPriestupky.getText()));
+        }
 
         clearComponets(jPanel1, "osoba");
 
@@ -652,6 +686,15 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
      * @param evt
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Thread tr = new Thread() {
+            public void run() {
+
+            }
+
+        };
+
+        tr.start();
+
         core.generujData(getInt(txtPocOsob.getText()), getInt(txtPocVoz.getText()));
     }//GEN-LAST:event_jButton1ActionPerformed
 
