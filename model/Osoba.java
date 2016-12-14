@@ -34,21 +34,23 @@ public class Osoba implements IData {
     SimpleDateFormat sf;
 
     public Osoba() {
-
+        this.sf = new SimpleDateFormat("dd.MM.yyyy");
     }
 
     public Osoba(int evc) {
+        this();
         this.evc = evc;
     }
 
     public Osoba(String meno, String przv, int evc, Calendar endPlatnost, boolean zakaz, int priestupky) {
+        this();
         this.meno = meno;
         this.przv = przv;
         this.evc = evc;
         this.endPlatnost = endPlatnost;
         this.zakaz = zakaz;
         this.priestupky = priestupky;
-        this.sf = new SimpleDateFormat("dd.MM.yyyy");
+
     }
 
     @Override
@@ -103,7 +105,7 @@ public class Osoba implements IData {
             this.priestupky = hlpInStream.readInt();
 
         } catch (IOException e) {
-            
+
             throw new IllegalStateException("Error during conversion from byte array.");
         } catch (ParseException ex) {
             Logger.getLogger(Osoba.class.getName()).log(Level.SEVERE, null, ex);

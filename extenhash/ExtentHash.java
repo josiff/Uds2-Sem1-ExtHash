@@ -5,14 +5,19 @@
  */
 package extenhash;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,13 +30,14 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class ExtentHash {
 
-    private LinkedList volneBloky;
     private List<Integer> adresar;
     private int hlbka;
     private RandomAccessFile raf;
     private Block block;
 
     private String file;
+
+    private final static String FILE_PREFIX = "adr-";
 
     private static final int MAX_HLBKA = 20;
 
@@ -41,10 +47,6 @@ public class ExtentHash {
         hlbka = 1;
         this.file = file;
         try {
-
-            PrintWriter pr = new PrintWriter(file);
-            pr.write("");
-            pr.close();
 
             raf = new RandomAccessFile(file, "rw");
 
@@ -108,8 +110,9 @@ public class ExtentHash {
 
     /**
      * Insert record to file
+     *
      * @param record
-     * @return 
+     * @return
      */
     public boolean insert(Record record) {
 
@@ -322,7 +325,7 @@ public class ExtentHash {
         }
 
     }
-    
+
     /**
      * Zmeno recordu v adresari
      *
@@ -369,19 +372,74 @@ public class ExtentHash {
 
         int sum = 0;
         int pom = Integer.MIN_VALUE;
-        for (Integer cis : adresar) {
-            if (pom != cis) {
+        /* for (Integer cis : adresar) {
+         if (pom != cis) {
 
-                block.fromArray(read(cis, block.getSize()));
-                sum += block.getCountRec();
-                root.add(block.getRecOfBlock(cis));
-                pom = cis;
-            }
+         block.fromArray(read(cis, block.getSize()));
+         sum += block.getCountRec();
+         root.add(block.getRecOfBlock(cis));
+         pom = cis;
+         }
+
+         }*/
+
+        pom = 0;
+        int maxAdr = Collections.max(adresar);
+        while (pom <= maxAdr) {
+
+            block.fromArray(read(pom, block.getSize()));
+            sum += block.getCountRec();
+            root.add(block.getRecOfBlock(pom));
+            pom += block.getSize();
 
         }
+
         System.out.println(sum);
 
         return model;
+
+    }
+
+    public void save() {
+
+        try {
+            PrintWriter pr = new PrintWriter(new BufferedWriter(new FileWriter(FILE_PREFIX + file)));
+            pr.println(hlbka);
+            for (Integer adr : adresar) {
+                pr.println(adr);
+            }
+            pr.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void load() {
+
+        BufferedReader bufReader;
+
+        String line = null;
+        File f = new File(FILE_PREFIX + file);
+        if (f.exists()) {
+            try {
+                bufReader = new BufferedReader(new FileReader(f));
+                if ((line = bufReader.readLine()) != null) {
+                    hlbka = Integer.parseInt(line);
+                }
+
+                while ((line = bufReader.readLine()) != null) {
+
+                    adresar.add(Integer.parseInt(line));
+
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
     }
 

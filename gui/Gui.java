@@ -108,6 +108,10 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         txtTestPoc = new javax.swing.JTextField();
         btnTestuj = new javax.swing.JButton();
         prgGener = new javax.swing.JProgressBar();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menuItemLoad = new javax.swing.JMenuItem();
+        menuItemSave = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -241,7 +245,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                             .addComponent(btnFindOs))
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Osoby", jPanel1);
@@ -472,7 +476,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                     .addComponent(txtTreeExport)
                     .addComponent(cbFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -533,7 +537,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                             .addComponent(jLabel15))))
                 .addGap(30, 30, 30)
                 .addComponent(prgGen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Nastavenia", jPanel4);
@@ -569,10 +573,32 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                     .addComponent(btnTestuj))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(prgGener, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(269, Short.MAX_VALUE))
+                .addContainerGap(248, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Test", jPanel5);
+
+        jMenu1.setText("File");
+
+        menuItemLoad.setText("Load");
+        menuItemLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemLoadActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuItemLoad);
+
+        menuItemSave.setText("Save");
+        menuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSaveActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuItemSave);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -706,7 +732,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
 
         tr.start();
 
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnTestujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestujActionPerformed
@@ -817,6 +843,14 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         clearComponets(jPanel1, "osoba");
     }//GEN-LAST:event_btnSaveVzActionPerformed
 
+    private void menuItemLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLoadActionPerformed
+        core.load();
+    }//GEN-LAST:event_menuItemLoadActionPerformed
+
+    private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
+        core.save();
+    }//GEN-LAST:event_menuItemSaveActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -884,6 +918,8 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -895,6 +931,8 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenuItem menuItemLoad;
+    private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JProgressBar prgGen;
     private javax.swing.JProgressBar prgGener;
     private javax.swing.JCheckBox tbHladane;
@@ -944,6 +982,5 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     public void viewGenProgres(int count) {
         prgGen.setValue(count);
     }
-    
 
 }

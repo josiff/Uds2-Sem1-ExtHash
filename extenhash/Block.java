@@ -37,7 +37,7 @@ public class Block {
         load = false;
 
         for (int i = 0; i < this.record.length; i++) {
-            this.record[i] = new Record(record.getData());
+            this.record[i] = new Record(record.getData().newRecord());
         }
 
     }

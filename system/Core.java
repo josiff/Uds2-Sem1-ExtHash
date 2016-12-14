@@ -268,4 +268,22 @@ public class Core {
         return generator;
     }
 
+    public void save() {
+
+        osoby.save();
+        vozidlaEvc.save();
+        vozidlaVin.save();
+        setInfoMsg("Dáta boli uložené");
+
+    }
+
+    public void load() {
+
+        osoby.load();
+        vozidlaEvc.load();
+        vozidlaVin.load();
+        setInfoMsg("Dáta boli načítané");
+
+    }
+
 }

@@ -36,6 +36,7 @@ public class Vozidlo implements IData {
     SimpleDateFormat sf;
 
     public Vozidlo(String evc, String vin, int napravy, int hmotnost, boolean hladane, Calendar endStk, Calendar endEk) {
+        this();
         this.evc = evc;
         this.vin = vin;
         this.napravy = napravy;
@@ -44,13 +45,14 @@ public class Vozidlo implements IData {
         this.endStk = endStk;
         this.endEk = endEk;
 
-        this.sf = new SimpleDateFormat("dd.MM.yyyy");
     }
 
     public Vozidlo() {
+        this.sf = new SimpleDateFormat("dd.MM.yyyy");
     }
 
     public Vozidlo(String evc) {
+        this();
         this.evc = evc;
     }
 
