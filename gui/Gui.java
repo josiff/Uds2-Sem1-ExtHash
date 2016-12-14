@@ -7,6 +7,7 @@ package gui;
 
 import com.sun.corba.se.impl.encoding.CodeSetConversion;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -104,6 +105,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
         jLabel15 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         prgGen = new javax.swing.JProgressBar();
+        jButton2 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         txtTestPoc = new javax.swing.JTextField();
         btnTestuj = new javax.swing.JButton();
@@ -497,6 +499,13 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
             }
         });
 
+        jButton2.setText("Clear Files");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -517,24 +526,30 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                             .addComponent(txtPocVoz, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1)))
-                .addContainerGap(340, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 249, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                            .addGap(27, 27, 27)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtPocOsob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtPocVoz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPocOsob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPocVoz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel15))))
+                        .addComponent(jButton2)))
                 .addGap(30, 30, 30)
                 .addComponent(prgGen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(199, Short.MAX_VALUE))
@@ -634,7 +649,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                     txtEvcOs.setText(String.valueOf(os.getEvc()));
                     txtMeno.setText(os.getMeno());
                     txtPrzv.setText(os.getPrzv());
-                    daPlatnost.setCurrent(os.getEndPlatnost());
+                    daPlatnost.setSelectedDate(os.getEndPlatnost());
                     tbVedenie.setSelected(os.isZakaz());
                     txtPriestupky.setText(String.valueOf(os.getPriestupky()));
                 }
@@ -668,7 +683,8 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                     tbVedenie.isSelected(),
                     getInt(txtPriestupky.getText()));
         }
-
+        daPlatnost.setSelectedDate(Calendar.getInstance());
+        tbVedenie.setSelected(false);
         clearComponets(jPanel1, "osoba");
 
 
@@ -787,8 +803,8 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                 txtPocNaprav.setText(String.valueOf(voz.getNapravy()));
                 txtHmotnost.setText(String.valueOf(voz.getHmotnost()));
                 tbHladane.setSelected(voz.isHladane());
-                daStk.setCurrent(voz.getEndStk());
-                daEk.setCurrent(voz.getEndEk());
+                daStk.setSelectedDate(voz.getEndStk());
+                daEk.setSelectedDate(voz.getEndEk());
 
             }
 
@@ -818,6 +834,10 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
      */
     private void btnSaveVzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveVzActionPerformed
 
+        Calendar dateStk = Calendar.getInstance();
+        dateStk.setTime(daStk.getCurrent().getTime());
+        Calendar dateEk = Calendar.getInstance();
+        dateEk.setTime(daEk.getCurrent().getTime());
         if (!txtSpz.isEditable()) {
             txtSpz.setEditable(true);
             txtVin.setEditable(true);
@@ -826,21 +846,23 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
                     getInt(txtPocNaprav.getText()),
                     getInt(txtHmotnost.getText()),
                     tbHladane.isSelected(),
-                    daStk.getCurrent(),
-                    daEk.getCurrent());
+                    dateStk,
+                    dateEk);
         } else {
             core.addVozidlo(txtSpz.getText(),
                     txtVin.getText(),
                     getInt(txtPocNaprav.getText()),
                     getInt(txtHmotnost.getText()),
                     tbHladane.isSelected(),
-                    daStk.getCurrent(),
-                    daEk.getCurrent());
+                    dateStk,
+                    dateEk);
         }
-
+        daEk.setSelectedDate(Calendar.getInstance());
+        daStk.setSelectedDate(Calendar.getInstance());
+        tbHladane.setSelected(false);
         clearComponets(jPanel2, "vozidlo");
 
-        clearComponets(jPanel1, "osoba");
+
     }//GEN-LAST:event_btnSaveVzActionPerformed
 
     private void menuItemLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLoadActionPerformed
@@ -850,6 +872,10 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
         core.save();
     }//GEN-LAST:event_menuItemSaveActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        core.clearFiles();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -902,6 +928,7 @@ public class Gui extends javax.swing.JFrame implements IMessage, IProgresUi {
     private datechooser.beans.DateChooserCombo daPlatnost;
     private datechooser.beans.DateChooserCombo daStk;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

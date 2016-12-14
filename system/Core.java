@@ -7,7 +7,6 @@ package system;
 
 import extenhash.Block;
 import extenhash.ExtentHash;
-import extenhash.IData;
 import extenhash.Record;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,12 +28,14 @@ public class Core {
     private ExtentHash vozidlaVin;
     private Block block;
 
+    private boolean generovanie;
+
     private List<IMessage> imesageListener;
     private Message msg;
     private SimpleDateFormat sf;
     private Generator generator;
 
-    private final int POC_RECORDOV_OS = 5;
+    private final int POC_RECORDOV_OS = 4;
     private final int POC_RECORDOV_EVC = 4;
     private final int POC_RECORDOV_VIN = 3;
 
@@ -47,6 +48,7 @@ public class Core {
         vozidlaVin = new ExtentHash("VozidlaVin.txt", new Record(new VozidloVIN()), POC_RECORDOV_VIN);
         this.sf = new SimpleDateFormat("dd.MM.yyyy");
         generator = new Generator();
+        generovanie = false;
 
     }
 
@@ -60,10 +62,14 @@ public class Core {
      * @param msg
      */
     public void showMsg(Message msg) {
-
-        for (IMessage item : imesageListener) {
-            item.onMessage(msg);
+        if (generovanie == false) {
+            if (!msg.getMsg().isEmpty()) {
+                imesageListener.stream().forEach((item) -> {
+                    item.onMessage(msg);
+                });
+            }
         }
+        msg.setMsg("");
 
     }
 
@@ -79,8 +85,8 @@ public class Core {
      */
     public void addOsobu(String meno, String przv, int evc, Calendar endPlatnost, boolean zakaz, int priestupky) {
         Osoba os = new Osoba(meno, przv, evc, endPlatnost, zakaz, priestupky);
-        osoby.insert(new Record(os));
-        // setInfoMsg("Záznam bol uložený");
+        osoby.insert(new Record(os), msg);
+        showMsg(msg);
 
     }
 
@@ -136,11 +142,11 @@ public class Core {
             int hmotnost, boolean hladane, Calendar endStk, Calendar endEk) {
 
         Record rec = new Record(new Vozidlo(evc, vin, napravy, hmotnost, hladane, endStk, endEk));
-        if (vozidlaEvc.insert(rec)) {
-            if (vozidlaVin.insert(new Record(new VozidloVIN(evc, vin))) == false) {
+        if (vozidlaEvc.insert(rec, msg)) {
+            if (vozidlaVin.insert(new Record(new VozidloVIN(evc, vin)), msg) == false) {
                 rec.setPlatny(false);
                 vozidlaEvc.remove(rec);
-                System.out.println(rec.getData().getTreeString());
+                //System.out.println(rec.getData().getTreeString());
             }
         }
 
@@ -199,18 +205,22 @@ public class Core {
      * @param pocVoz
      */
     public void generujData(int pocOsob, int pocVoz) {
+        generovanie = true;
         long startTime = System.nanoTime();
         generator.generujData(this, pocOsob, pocVoz);
         long endTime = System.nanoTime();
         double duration = (endTime - startTime) / 60000000000.0;
+        generovanie = false;
         setInfoMsg("Dáta boli vygenerované " + duration);
     }
 
     public void testujData(int pocOsob) {
+        generovanie = true;
         long startTime = System.nanoTime();
         generator.testujData(this, pocOsob);
         long endTime = System.nanoTime();
         double duration = (endTime - startTime) / 60000000000.0;
+        generovanie = false;
         setInfoMsg("Koniec testovania. Doba testovania>" + duration);
 
     }
@@ -284,6 +294,17 @@ public class Core {
         vozidlaVin.load();
         setInfoMsg("Dáta boli načítané");
 
+    }
+
+    public void setGenerovanie(boolean generovanie) {
+        this.generovanie = generovanie;
+    }
+
+    public void clearFiles() {
+
+        osoby.clearFile();
+        vozidlaEvc.clearFile();
+        vozidlaVin.clearFile();
     }
 
 }

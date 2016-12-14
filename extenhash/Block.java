@@ -56,6 +56,10 @@ public class Block {
 
     }
 
+    /**
+     * Pridanie do bloku
+     * @param r 
+     */
     public void add(Record r) {
         for (int i = 0; i < record.length; i++) {
             if (!record[i].isPlatny()) {
@@ -68,12 +72,19 @@ public class Block {
 
     }
 
+    /**
+     * Vymazanie z bloku
+     * @param index 
+     */
     public void remove(int index) {
         record[index].setPlatny(false);
         countRec--;
 
     }
 
+    /**
+     * Vycistenie bloku
+     */
     public void clearRec() {
         countRec = 0;
         for (int i = 0; i < record.length; i++) {
@@ -94,6 +105,11 @@ public class Block {
         this.size = size;
     }
 
+    /**
+     * Vytvorenie [] recordov z nacitanych bytov
+     * @param b
+     * @return 
+     */
     public Record[] fromArray(byte[] b) {
         clearRec();
         int position = 0;
@@ -135,6 +151,10 @@ public class Block {
         return record;
     }
 
+    /**
+     * Vytvorenie pola bytov na ulozenie
+     * @return 
+     */
     public byte[] getByteArray() {
 
         ByteArrayOutputStream hlpByteArrayOutputStream = new ByteArrayOutputStream();
@@ -223,6 +243,11 @@ public class Block {
         this.load = load;
     }
 
+    /**
+     * Najdenie recordu
+     * @param paRec
+     * @return 
+     */
     public IData find(Record paRec) {
 
         for (Record rec : record) {
@@ -237,6 +262,11 @@ public class Block {
 
     }
 
+    /**
+     * Zmena recordu
+     * @param paRec
+     * @return 
+     */
     public boolean change(Record paRec) {
 
         for (Record rec : record) {
@@ -252,6 +282,11 @@ public class Block {
 
     }
 
+    /**
+     * Vymazanie recordu
+     * @param paRec
+     * @return 
+     */
     public boolean remove(Record paRec) {
 
         for (Record rec : record) {

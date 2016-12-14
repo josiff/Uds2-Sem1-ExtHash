@@ -16,13 +16,13 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import system.Message;
 
 /**
  *
@@ -52,11 +52,16 @@ public class ExtentHash {
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Vlozenie bloku na adresu
+     *
+     * @param block
+     * @param adresa
+     * @return
+     */
     private int insert(Block block, int adresa) {
 
         try {
@@ -72,6 +77,13 @@ public class ExtentHash {
         return 0;
     }
 
+    /**
+     * Citanie zo suboru
+     *
+     * @param offset
+     * @param length
+     * @return
+     */
     public byte[] read(int offset, int length) {
 
         byte[] b = new byte[length];
@@ -89,6 +101,11 @@ public class ExtentHash {
         return b;
     }
 
+    /**
+     * Rozsirenie adresara
+     *
+     * @param index
+     */
     public void rozsirAdresy(int index) {
 
         hlbka += 1;
@@ -114,7 +131,7 @@ public class ExtentHash {
      * @param record
      * @return
      */
-    public boolean insert(Record record) {
+    public boolean insert(Record record, Message msg) {
 
         boolean flag = false;
         int adresa = 0;
@@ -150,6 +167,9 @@ public class ExtentHash {
                     if (block.getHlbka() == getHlbka()) {
                         if (hlbka >= MAX_HLBKA) {
                             //System.out.println("Plny adresar" + hlbka + " " + record.getData().getTreeString());
+                            msg.setMsg(String.format("Záznam %s nebolo možné vložiť "
+                                    + "pretože adresar ma maximálnu veľkosť "
+                                    + "a nie je implementované preplnovanie blokov", record.getData().getTreeString()));
                             block.clearRec();
                             /*  System.out.println(adresar.size());*/
                             return false;
@@ -174,6 +194,12 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Rozdelenie blokov a presunutie recordov
+     *
+     * @param record
+     * @param paAdresa
+     */
     public void rozdelBlock(Record record, int paAdresa) {
         int min = getIndexMin(record, block.getHlbka(), hlbka);
         int max = getIndexMax(record, block.getHlbka(), hlbka);
@@ -206,11 +232,24 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Vrati index
+     *
+     * @param record
+     * @return
+     */
     public int getIndex(Record record) {
         return getIndex(record, hlbka);
 
     }
 
+    /**
+     * Vrati index
+     *
+     * @param record
+     * @param paHlbka
+     * @return
+     */
     public int getIndex(Record record, int paHlbka) {
         BitSet bs = record.getData().getHash();
         int num = 0;
@@ -225,6 +264,14 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Najdenie minimalneho indexu v bloku
+     *
+     * @param record
+     * @param paHlbka
+     * @param novaHlbka
+     * @return
+     */
     public int getIndexMin(Record record, int paHlbka, int novaHlbka) {
         BitSet bs = record.getData().getHash();
         int num = 0;
@@ -241,6 +288,14 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Najdenie maximalneho indexu v bloku
+     *
+     * @param record
+     * @param paHlbka
+     * @param novaHlbka
+     * @return
+     */
     public int getIndexMax(Record record, int paHlbka, int novaHlbka) {
         BitSet bs = record.getData().getHash();
         int num = 0;
@@ -400,6 +455,9 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Ulozenie adresara a hlbky
+     */
     public void save() {
 
         try {
@@ -416,6 +474,9 @@ public class ExtentHash {
 
     }
 
+    /**
+     * Nacitanie adresara a hlbky
+     */
     public void load() {
 
         BufferedReader bufReader;
@@ -439,6 +500,24 @@ public class ExtentHash {
             } catch (IOException ex) {
                 Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+
+    }
+
+    public void clearFile() {
+
+        PrintWriter pr = null;
+        try {
+            pr = new PrintWriter(new File(file));
+            pr.print("");
+            pr.close();
+            pr = new PrintWriter(new File(FILE_PREFIX + file));
+            pr.print("");
+            pr.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExtentHash.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            pr.close();
         }
 
     }

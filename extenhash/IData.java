@@ -13,16 +13,33 @@ import java.util.BitSet;
  */
 public interface IData {
 
+    /**
+     * Vrati hash
+     * @return 
+     */
     BitSet getHash();
 
+    /**
+     * Vrati pole bytov recordu
+     * @return 
+     */
     byte[] getByteArray();
 
+    /**
+     * Nacita record z pola bytov
+     * @param array 
+     */
     void fromByteArray(byte[] array);
 
     int getSize();
 
+    
     boolean equals(Record record);
 
+    /**
+     * Vypis pre stromove zobrazenie
+     * @return 
+     */
     String getTreeString();
 
     IData newRecord();

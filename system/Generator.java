@@ -93,8 +93,8 @@ public class Generator {
                     Calendar.getInstance(),
                     Calendar.getInstance()
             );
-            
-             onGenerData(getStav(pocVoz, i));
+
+            onGenerData(getStav(pocVoz, i));
 
         }
         onGenerData(100);
@@ -113,12 +113,12 @@ public class Generator {
             genData.add(os);
 
         }
-
+        Message msg = new Message();
         for (int i = 1; i <= pocOsob; i++) {
 
             //Osoba os = genData.remove(rnd.nextInt(genData.size()));
             Osoba os = genData.get(i);
-            if (ct.getOsoby().insert(new Record(os))) {
+            if (ct.getOsoby().insert(new Record(os), msg)) {
 
                 inserData.add(os);
                 listOs.add(os);

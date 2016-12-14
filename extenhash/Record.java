@@ -10,11 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Osoba;
 
 /**
  *
